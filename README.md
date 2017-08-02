@@ -105,7 +105,7 @@ ambari-agent start
 
 You should see something like this
 
-![Ambari-config](https://github.com/gamboabdoulraoufou/hdp-2-ambari-and-hadoop-components-installation/blob/master/img/ambari_config.png)
+![Ambari-config](https://github.com/gamboabdoulraoufou/hdp-2-ambari-and-hadoop-components-installation/blob/master/img/ambari_ui.png)
 
 
 > Create cluster
