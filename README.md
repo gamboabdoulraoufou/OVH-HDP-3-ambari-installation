@@ -46,3 +46,70 @@ ambari-server setup
 
 ![Ambari-config](https://github.com/gamboabdoulraoufou/hdp-2-ambari-and-hadoop-components-installation/blob/master/img/ambari_config.png)
 
+
+> Disable ...
+
+```sh
+sed -i 's@enabled=1@enabled=0@' /var/lib/ambari-server/resources/stacks/HDP/2.0.6/configuration/cluster-env.xml
+
+```
+
+
+> Install and configure Ambari agent `_All nodes_`
+
+```sh
+# install ambari agent
+yum install ambari-agent
+
+# backup config file 
+cp -p /etc/ambari-agent/conf/ambari-agent.ini /etc/ambari-agent/conf/ambari-agent.ini.ORI
+
+# edit file
+vi /etc/ambari-agent/conf/ambari-agent.ini
+
+# add then content bellow
+[server]
+# hostname=localhost
+# hostname=ambari_server_host_name for all nodes
+hostname=instance-1.c.equipe-1314.internal
+[agent]
+hostname_script=/var/lib/ambari-agent/hostname.sh
+
+# save and quit
+
+# create hostname.sh file
+vi /var/lib/ambari-agent/hostname.sh
+
+# add the current host name
+#!/bin/sh
+echo instance-1.c.equipe-1314.internal
+
+# save and quit
+
+# set permission
+chmod +x /var/lib/ambari-agent/hostname.sh
+
+# start Ambari server (on ambari server host)
+ambari-server start
+
+# start Ambari agent
+ambari-agent start
+
+```
+
+
+> Connecte to Ambari web UI
+- Go to http://IP:8080 or http://hostname:8080
+- Login: admin
+- Password: admin
+
+You should see something like this
+
+![Ambari-config](https://github.com/gamboabdoulraoufou/hdp-2-ambari-and-hadoop-components-installation/blob/master/img/ambari_config.png)
+
+
+> Create cluster
+
+
+
+
