@@ -1,4 +1,4 @@
-### HDP-2-ambari-and-hadoop-cluster-installation
+### HDP-2-ambari-installation
 
 > Configuration
 - 4 VMs on google compute Engine (3 VM for Hadoop Cluster and 1 VM for data backup and micro service)
