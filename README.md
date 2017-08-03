@@ -13,7 +13,7 @@
 ![MetaStore remote database](https://github.com/gamboabdoulraoufou/hdp-1-host-config/blob/master/img/archi.png)
 
 
-> Install MySQL database `_Cloudera Manager node_` 
+> Install MySQL database `MySQL node (_instance-3)_`
 
 ```sh
 # log as root
@@ -32,7 +32,7 @@ yum -y install mysql-server
 systemctl start mysqld
 ``` 
  
-> Configure MySQL database step 1
+> Configure MySQL database step 1 `MySQL node (_instance-3)_` 
 ```sh  
 # Update /etc/my.cnf or /etc/mysql/my.cnf file at least the values shown below
 
@@ -103,7 +103,7 @@ pid-file=/var/run/mysqld/mysqld.pid
 systemctl restart mysqld
 ``` 
 
-> Configure MySQL database step 2
+> Configure MySQL database step 2 `MySQL node (_instance-3)_`
 You will be given the choice to change:
 - root password
 - remove anonymous user accounts
@@ -117,9 +117,10 @@ mysql_secure_installation
 
 # press enter and set all parameter to yes (change root password)
 ``` 
+
 ![MetaStore remote database](https://github.com/gamboabdoulraoufou/Cloudera-2-Cloudera-Manager-instllation/blob/master/img/mysql_secure_installation.PNG)
 
-> Configure MySQL database step 3  
+> Configure MySQL database step 3 `MySQL node (_instance-3)_`
 ```sh
 # installing the MySQL JDBC Connector
 yum install -y mysql-connector-java 
@@ -132,7 +133,7 @@ systemctl enable mysqld.service
 systemctl list-dependencies mysqld
 ``` 
 
-> Configure MySQL database step 4
+> Configure MySQL database step 4 `MySQL node (_instance-3)_` 
 create the required databases in MySQL
 - Activity Monitor
 - Service Monitor
