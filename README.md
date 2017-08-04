@@ -22,6 +22,7 @@ cd
 
 # download
 wget http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.4.0.1/ambari.repo
+wget http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.5.6.0/ambari.repo
 
 # copy ambari repos into yum repos 
 mv ambari.repo /etc/yum.repos.d
