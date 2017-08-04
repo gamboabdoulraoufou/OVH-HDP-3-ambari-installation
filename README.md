@@ -104,7 +104,7 @@ innodb_log_file_size = 512M
 # join_buffer_size = 128M
 # sort_buffer_size = 2M
 # read_rnd_buffer_size = 2M
-datadir=/var/lib/mysql
+datadir=/hadoop//var/lib/mysql
 socket=/var/lib/mysql/mysql.sock
 
 # Disabling symbolic-links is recommended to prevent assorted security risks
