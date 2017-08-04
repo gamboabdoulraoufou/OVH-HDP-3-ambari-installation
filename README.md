@@ -16,6 +16,9 @@
 > Install Ambari server `_Ambari server node (instance-3)_`
 
 ```sh
+# log as root
+sudo su
+
 # installation
 yum install -y ambari-server
 ```
@@ -23,9 +26,6 @@ yum install -y ambari-server
 > Install MySQL database `Ambari Server host (_instance-3)_`
 
 ```sh
-# log as root
-sudo su
- 
 # check hostname
 hostname -f
 
