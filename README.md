@@ -13,7 +13,14 @@
 ![MetaStore remote database](https://github.com/gamboabdoulraoufou/hdp-1-host-config/blob/master/img/archi.png)
 
 
-> Install MySQL database `MySQL node (_instance-3)_`
+> Install Ambari server `_Ambari server node (instance-3)_`
+
+```sh
+# installation
+yum install -y ambari-server
+```
+
+> Install MySQL database `Ambari Server host (_instance-3)_`
 
 ```sh
 # log as root
@@ -32,7 +39,7 @@ yum -y install mysql-server
 systemctl start mysqld
 ``` 
  
-> Configure MySQL database step 1 `MySQL node (_instance-3)_` 
+> Configure MySQL database step 1 `Ambari Server host (_instance-3)_` 
 ```sh  
 # Update /etc/my.cnf or /etc/mysql/my.cnf file at least the values shown below
 
@@ -103,7 +110,7 @@ pid-file=/var/run/mysqld/mysqld.pid
 systemctl restart mysqld
 ``` 
 
-> Configure MySQL database step 2 `MySQL node (_instance-3)_`
+> Configure MySQL database step 2 `Ambari Server host (_instance-3)_`
 You will be given the choice to change:
 - root password
 - remove anonymous user accounts
@@ -120,12 +127,20 @@ mysql_secure_installation
 
 ![MetaStore remote database](https://github.com/gamboabdoulraoufou/Cloudera-2-Cloudera-Manager-instllation/blob/master/img/mysql_secure_installation.PNG)
 
-> Configure MySQL database step 3 `MySQL node (_instance-3)_`
+> Configure MySQL database step 3 `Ambari Server host (_instance-3)_`
 ```sh
-# installing the MySQL JDBC Connector
-yum install -y mysql-connector-java 
+# installing the MySQL JDBC Connector 
+yum install -y mysql-connector-java*
 
-# restart
+# check installation
+ls /usr/share/java/mysql-connector-java.jar
+
+# make sure the .jar file has the appropriate permissions - 644
+
+# stage the appropriate MySQL connector for later deployment
+ambari-server setup --jdbc-db=mysql --jdbc-driver=/usr/share/java/mysql-connector-java.jar
+
+# restart MySQL
 systemctl restart mysqld
 
 # ensure the MySQL server starts at boot
@@ -133,80 +148,105 @@ systemctl enable mysqld.service
 systemctl list-dependencies mysqld
 ``` 
 
-> Configure MySQL database step 4 `MySQL node (_instance-3)_` 
-create the required databases in MySQL
-- Activity Monitor
-- Service Monitor
-- Report Manager
-- Host Monitor
-- Hive metastore
-- Cloudera Navigator
- 
-```sh  
-# log into MySQL as the root user
+> Set up MySQL database for Ambari [Ref.](https://docs.hortonworks.com/HDPDocuments/Ambari-2.1.2.1/bk_ambari_reference_guide/content/_using_ambari_with_mysql.html)
+
+```sh
+# log to MySQL
 mysql -u root -p
+```
 
+```sql
+# Create a user for Ambari and grant it permissions
+CREATE USER 'ambari_user'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'ambari_user'@'%';
+CREATE USER 'ambari_user'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'ambari_user'@'localhost';
+CREATE USER 'ambari_user'@'instance-1.c.equipe-1314.internal' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'ambari_user'@'instance-1.c.equipe-1314.internal';
+FLUSH PRIVILEGES;
 
-amon, cmserver, hue, metastore, oozie, and rman
-# Create a database for the Activity Monitor
-create database amon DEFAULT CHARACTER SET utf8;
-grant all on amon.* TO 'amon_user'@'%' IDENTIFIED BY 'password';
-
-# create a database for the cmserver
-create database cmserver DEFAULT CHARACTER SET utf8;
-grant all on cmserver.* TO 'cmserver_user'@'%' IDENTIFIED BY 'password';
-
-# create a database for hue
-create database hue DEFAULT CHARACTER SET utf8;
-grant all on hue.* TO 'hue_user'@'%' IDENTIFIED BY 'password';
-
-# create a database for the Hive metastore
-create database metastore DEFAULT CHARACTER SET utf8;
-grant all on metastore.* TO 'metastore_user'@'%' IDENTIFIED BY 'password';
-
-# create a database for oozie
-create database oozie DEFAULT CHARACTER SET utf8;
-grant all on oozie.* TO 'oozie_user'@'%' IDENTIFIED BY 'password';
-
-# create a database for the ressource manager
-create database rman DEFAULT CHARACTER SET utf8;
-grant all on rman.* TO 'rman_user'@'%' IDENTIFIED BY 'password';
-
-# quit mysql
+# quit MySQL
 exit
-
-# Backing Up the MySQL Databases
-#mysqldump -h<hostname> -u<username> -p<password> <database> > /tmp/<database-backup>.sql
-#mysqldump -hmyhost.example.com -uroot -pcloudera scm_database > /tmp/scm_database-backup.sql
 ```
 
-> Download the Ambari repository file to a directory `_Ambari server node (instance-1)_`
+```sh
+# log to MySQL
+mysql -u ambari_user -p
+```
+
+```sql
+# Load the Ambari Server database schema
+CREATE DATABASE ambari_database;
+USE ambari_database;
+SOURCE Ambari-DDL-MySQL-CREATE.sql;
+
+# quit MySQL
+exit
+```
+When setting up the Ambari Server, select Advanced Database Configuration > Option [3] MySQL and set password
+
+
+> Set up MySQL database for Hive [Ref.](https://docs.hortonworks.com/HDPDocuments/Ambari-2.1.2.1/bk_ambari_reference_guide/content/_using_hive_with_mysql.html) `_Ambari server node (instance-1)_`
 
 ```sh
-# Log as root
-sudo su
-cd
+# log to MySQL
+mysql -u root -p
+```
 
-# download
-wget -nv http://public-repo-1.hortonworks.com/ambari/centos6/2.x/updates/2.4.1.0/ambari.repo 
+```sql
+# create a user for Hive and grant it permissions
+CREATE USER 'hive_user'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'hive_user'@'localhost';
+CREATE USER 'hive_user'@'%' IDENTIFIED BY password;
+GRANT ALL PRIVILEGES ON *.* TO 'hive_user'@'%';
+CREATE USER 'hive_user'@'instance-1.c.equipe-1314.internal' IDENTIFIED BY password;
+GRANT ALL PRIVILEGES ON *.* TO 'hive_user'@'instance-1.c.equipe-1314.internal';
+FLUSH PRIVILEGES;
 
-# copy into yum repo
-mv ambari.repo /etc/yum.repos.d
+# quit MysQL
+exit
+```
 
-# copy Ambari repository on each node
-scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@instance-2.c.equipe-1314.internal:/etc/yum.repos.d/ambari.repo
-scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@instance-3.c.equipe-1314.internal:/etc/yum.repos.d/ambari.repo
+```sh
+# log to MySQL
+mysql -u root -p
+```
 
+```sql
+CREATE DATABASE hive_database;
+```
+
+> Set up MySQL database for OOZIE [Ref.](https://docs.hortonworks.com/HDPDocuments/Ambari-2.1.2.1/bk_ambari_reference_guide/content/_using_oozie_with_mysql.html) `_Ambari server node (instance-1)_`
+
+```sh
+# log to MySQL
+mysql -u root -p
+```
+
+```sql
+# create a user for oozie and grant it permissions
+CREATE USER 'oozie_user'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'oozie_user'@'%';
+FLUSH PRIVILEGES;
+
+# quit MysQL
+exit
+```
+
+```sh
+# log to MySQL
+mysql -u root -p
+```
+
+```sql
+CREATE DATABASE oozie_database;
 ```
 
 
-> Install and configure Ambari server `_Ambari server node (instance-1)_`
+> Configure Ambari server `_Ambari server node (instance-3)_`
 
 ```sh
-# installation
-yum install -y ambari-server
-
-# configuration [help](https://community.hortonworks.com/questions/55968/ambari-agent-start-failed-2.html)
+# configuration [Ref.](https://community.hortonworks.com/questions/55968/ambari-agent-start-failed-2.html)
 ambari-server setup
 
 ``` 
@@ -238,7 +278,7 @@ vi /etc/ambari-agent/conf/ambari-agent.ini
 [server]
 # hostname=localhost
 # hostname=ambari_server_host_name for all nodes
-hostname=instance-1.c.equipe-1314.internal
+hostname=instance-3.c.equipe-1314.internal
 [agent]
 hostname_script=/var/lib/ambari-agent/hostname.sh
 
@@ -249,19 +289,27 @@ vi /var/lib/ambari-agent/hostname.sh
 
 # add the current host name
 #!/bin/sh
-echo instance-1.c.equipe-1314.internal
+echo instance-3.c.equipe-1314.internal
 
 # save and quit
 
 # set permission
 chmod +x /var/lib/ambari-agent/hostname.sh
 
-# start Ambari server (on ambari server host)
-ambari-server start
+```
 
+> Start Ambari server `_Ambari server node (instance-3)_`
+
+```sh
+# start Ambari server
+ambari-server start
+```
+
+> Start Ambari agent `_All nodes_`
+
+```sh
 # start Ambari agent
 ambari-agent start
-
 ```
 
 
