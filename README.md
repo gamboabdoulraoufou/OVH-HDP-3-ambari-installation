@@ -265,7 +265,7 @@ ambari-server setup
 
 ``` 
 
-![Ambari-config](https://github.com/gamboabdoulraoufou/hdp-2-ambari-and-hadoop-components-installation/blob/master/img/ambari_config.png)
+![Ambari-config](https://github.com/gamboabdoulraoufou/hdp-2-ambari-and-hadoop-components-installation/blob/master/img/ambari_config2.png)
 
 
 > Disable ...
