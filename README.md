@@ -13,17 +13,28 @@
 ![MetaStore remote database](https://github.com/gamboabdoulraoufou/hdp-1-host-config/blob/master/img/archi.png)
 
 
-> Install Ambari server `_Ambari server node (instance-3)_`
+> Download and install Ambari server `_Ambari server node (instance-1)_`
 
 ```sh
 # log as root
 sudo su
+cd
+
+# download
+wget http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.4.0.1/ambari.repo
+
+# copy ambari repos into yum repos 
+mv ambari.repo /etc/yum.repos.d
+
+# copy ambari repo into all other nodes
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@instance-2.c.equipe-1314.internal:/etc/yum.repos.d/ambari.repo
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@instance-3.c.equipe-1314.internal:/etc/yum.repos.d/ambari.repo
 
 # installation
 yum install -y ambari-server
 ```
 
-> Install MySQL database `Ambari Server host (_instance-3)_`
+> Install MySQL database `Ambari Server host (_instance-1)_`
 
 ```sh
 # check hostname
@@ -39,7 +50,7 @@ yum -y install mysql-server
 systemctl start mysqld
 ``` 
  
-> Configure MySQL database step 1 `Ambari Server host (_instance-3)_` 
+> Configure MySQL database step 1 `Ambari Server host (_instance-1)_` 
 ```sh  
 # Update /etc/my.cnf or /etc/mysql/my.cnf file at least the values shown below
 
@@ -133,7 +144,7 @@ mysql_secure_installation
 yum install -y mysql-connector-java*
 
 # check installation
-ls /usr/share/java/mysql-connector-java.jar
+ll /usr/share/java/mysql-connector-java.jar
 
 # make sure the .jar file has the appropriate permissions - 644
 
@@ -178,7 +189,7 @@ mysql -u ambari_user -p
 # Load the Ambari Server database schema
 CREATE DATABASE ambari_database;
 USE ambari_database;
-SOURCE Ambari-DDL-MySQL-CREATE.sql;
+SOURCE /var/lib/ambari-server/resources/Ambari-DDL-MySQL-CREATE.sql;
 
 # quit MySQL
 exit
@@ -197,11 +208,14 @@ mysql -u root -p
 # create a user for Hive and grant it permissions
 CREATE USER 'hive_user'@'localhost' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON *.* TO 'hive_user'@'localhost';
-CREATE USER 'hive_user'@'%' IDENTIFIED BY password;
+CREATE USER 'hive_user'@'%' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON *.* TO 'hive_user'@'%';
-CREATE USER 'hive_user'@'instance-1.c.equipe-1314.internal' IDENTIFIED BY password;
+CREATE USER 'hive_user'@'instance-1.c.equipe-1314.internal' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON *.* TO 'hive_user'@'instance-1.c.equipe-1314.internal';
 FLUSH PRIVILEGES;
+
+# check users
+SELECT User, Host, Password FROM mysql.user;
 
 # quit MysQL
 exit
@@ -209,7 +223,7 @@ exit
 
 ```sh
 # log to MySQL
-mysql -u root -p
+mysql -u hive_user -p
 ```
 
 ```sql
@@ -235,7 +249,7 @@ exit
 
 ```sh
 # log to MySQL
-mysql -u root -p
+mysql -u oozie_user -p
 ```
 
 ```sql
