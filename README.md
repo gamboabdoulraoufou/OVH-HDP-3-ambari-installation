@@ -37,8 +37,8 @@ scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@instance-2.c.equipe-1
 scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@instance-3.c.equipe-1314.internal:/etc/yum.repos.d/ambari.repo
 
 # copy ambari repo into all other nodes
-scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@instance-2.c.equipe-1314.internal:/etc/yum.repos.d/ambari.repo
-scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@instance-3.c.equipe-1314.internal:/etc/yum.repos.d/ambari.repo
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp.repo root@instance-2.c.equipe-1314.internal:/etc/yum.repos.d/hdp.repo
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp.repo root@instance-3.c.equipe-1314.internal:/etc/yum.repos.d/hdp.repo
 
 # installation
 yum clear all
