@@ -17,8 +17,7 @@
 
 ```sh
 # log as root
-sudo su
-cd
+sudo su - root
 
 # download
 ## from internet
