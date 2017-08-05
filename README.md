@@ -13,72 +13,6 @@
 ![MetaStore remote database](https://github.com/gamboabdoulraoufou/hdp-1-host-config/blob/master/img/archi.png)
 
 
-> Setting Up a Local Repository
-
-```sh
-# install yum utilities
-yum install -y yum-utils createrepo
-
-# create an HTTP server
-yum clean all
-yum -y update
-yum -y install httpd
-firewall-cmd --permanent --add-port=80/tcp
-firewall-cmd --permanent --add-port=443/tcp
-firewall-cmd --reload
-systemctl start httpd
-systemctl enable httpd
-systemctl status httpd
-
-# create a directory for your web server
-mkdir -p /var/www/html/
-
-# create hdf repo folder
-mkdir repo
-
-# get ambari tarball (https://docs.hortonworks.com/HDPDocuments/Ambari-2.5.1.0/bk_ambari-installation/content/ambari_repositories.html)
-wget http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.5.1.0/ambari-2.5.1.0-centos7.tar.gz
-wget http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.5.1.0/ambari.repo
-
-# get hdp tarball (https://docs.hortonworks.com/HDPDocuments/Ambari-2.5.1.0/bk_ambari-installation/content/hdp_stack_repositories.html)
-wget http://public-repo-1.hortonworks.com/HDP/centos7/2.x/updates/2.5.6.0/HDP-2.5.6.0-centos7-rpm.tar.gz
-wget http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.21/repos/centos7/HDP-UTILS-1.1.0.21-centos7.tar.gz
-wget http://public-repo-1.hortonworks.com/HDP/centos7/2.x/updates/2.5.6.0/hdp.repo
-
-# check files
-cat *.repo
-
-# untar file
-mkdir HDP-UTILS
-tar -xvzf ambari-2.5.1.0-centos7.tar.gz; tar -xvzf HDP-2.5.6.0-centos7-rpm.tar.gz; tar -xvzf HDP-UTILS-1.1.0.21-centos7.tar.gz -C HDP-UTILS
-
-# move file into repo folder
-mv ambari/ /var/www/html/repo
-mv HDP /var/www/html/repo
-mv HDP-UTILS /var/www/html/repo
-
-# check files
-ll /var/www/html/repo
-
-drwxr-xr-x  3 cloud users   21 Jul  3 05:54 ambari
-drwxr-xr-x  3 cloud users   21 Jun 26 19:06 HDP
-drwxr-xr-x 21 root  root  4096 Aug  5 12:00 HDP-UTILS
-
-```
-
-
-> Go to go to http://IP/repo/ or http://hostname/repo
-
-You should see something like this
-
-> Set ambari repo
-```sh
-cat ambari.repo
-
-vi ambari.repo
-
-baseurl=http://35.197.46.155/repo/ambari/centos7
-```
 > Download and install Ambari server `_Ambari server node (instance-1)_`
 
 ```sh
@@ -87,17 +21,28 @@ sudo su
 cd
 
 # download
+## from internet
 wget http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.4.0.1/ambari.repo
-wget http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.5.6.0/ambari.repo
+
+## from local repository
+wget http://velvet-repo.c.equipe-1314.internal/repo/AMBARI/centos7/ambari.repo
+wget http://velvet-repo.c.equipe-1314.internal/repo/HDP/centos7/hdp.repo
+
 
 # copy ambari repos into yum repos 
 mv ambari.repo /etc/yum.repos.d
+mv hdp.repo /etc/yum.repos.d
+
+# copy ambari repo into all other nodes
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@instance-2.c.equipe-1314.internal:/etc/yum.repos.d/ambari.repo
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@instance-3.c.equipe-1314.internal:/etc/yum.repos.d/ambari.repo
 
 # copy ambari repo into all other nodes
 scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@instance-2.c.equipe-1314.internal:/etc/yum.repos.d/ambari.repo
 scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@instance-3.c.equipe-1314.internal:/etc/yum.repos.d/ambari.repo
 
 # installation
+yum clear all
 yum install -y ambari-server
 ```
 
