@@ -26,19 +26,24 @@ wget http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.4.0.1/amb
 ## from local repository
 wget http://velvet-repo.c.equipe-1314.internal/repo/AMBARI/centos7/ambari.repo
 wget http://velvet-repo.c.equipe-1314.internal/repo/HDP/centos7/hdp.repo
-
+wget http://velvet-repo.c.equipe-1314.internal/repo/HDP-UTILS/hdp-util.repo
 
 # copy ambari repos into yum repos 
 mv ambari.repo /etc/yum.repos.d
 mv hdp.repo /etc/yum.repos.d
+mv hdp-util.repo /etc/yum.repos.d
 
 # copy ambari repo into all other nodes
-scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@instance-2.c.equipe-1314.internal:/etc/yum.repos.d/ambari.repo
-scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@instance-3.c.equipe-1314.internal:/etc/yum.repos.d/ambari.repo
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@instance-2.c.equipe-1314.internal:/etc/yum.repos.d/
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@instance-3.c.equipe-1314.internal:/etc/yum.repos.d/
 
-# copy ambari repo into all other nodes
-scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp.repo root@instance-2.c.equipe-1314.internal:/etc/yum.repos.d/hdp.repo
-scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp.repo root@instance-3.c.equipe-1314.internal:/etc/yum.repos.d/hdp.repo
+# copy hdp-utils repo into all other nodes
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp-util.repo root@instance-2.c.equipe-1314.internal:/etc/yum.repos.d/
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp-util.repo root@instance-3.c.equipe-1314.internal:/etc/yum.repos.d/
+
+# copy hdp repo into all other nodes
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp.repo root@instance-2.c.equipe-1314.internal:/etc/yum.repos.d/
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp.repo root@instance-3.c.equipe-1314.internal:/etc/yum.repos.d/
 
 # installation
 yum clear all
