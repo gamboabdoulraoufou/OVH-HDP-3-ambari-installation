@@ -13,7 +13,7 @@
 ![MetaStore remote database](https://github.com/gamboabdoulraoufou/hdp-1-host-config/blob/master/img/archi.png)
 
 
-> Download and install Ambari server `_Ambari server node (instance-1)_`
+> Download and install Ambari server `_Ambari server node (hdp-1)_`
 
 ```sh
 # log as root
@@ -24,7 +24,7 @@ sudo su - root
 wget http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.4.0.1/ambari.repo
 
 ## from local repository
-wget http://velvet-repo.c.projet-ic-166005.internal/repo/AMBARI/centos7/ambari.repo
+wget http://velvet-repo.c.projet-ic-166005.internal/repo/AMBARI/centos7/2.4.0.1-1/ambari.repo
 wget http://velvet-repo.c.projet-ic-166005.internal/repo/HDP/centos7/hdp.repo
 wget http://velvet-repo.c.projet-ic-166005.internal/repo/HDP-UTILS/hdp-util.repo
 
@@ -36,24 +36,22 @@ mv hdp-util.repo /etc/yum.repos.d
 # copy ambari repo into all other nodes
 scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@hdp-2.c.projet-ic-166005.internal:/etc/yum.repos.d/
 scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@hdp-3.c.projet-ic-166005.internal:/etc/yum.repos.d/
-scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@hdp-4.c.projet-ic-166005.internal:/etc/yum.repos.d/
 
 # copy hdp-utils repo into all other nodes
 #scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp-util.repo root@hdp-2.c.projet-ic-166005.internal:/etc/yum.repos.d/
 #scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp-util.repo root@hdp-3.c.projet-ic-166005.internal:/etc/yum.repos.d/
-#scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp-util.repo root@hdp-4.c.projet-ic-166005.internal:/etc/yum.repos.d/
 
 # copy hdp repo into all other nodes
 scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp.repo root@hdp-2.c.projet-ic-166005.internal:/etc/yum.repos.d/
 scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp.repo root@hdp-3.c.projet-ic-166005.internal:/etc/yum.repos.d/
-scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp.repo root@hdp-4.c.projet-ic-166005.internal:/etc/yum.repos.d/
 
 # installation
 yum clean all
+yum -y update
 yum install -y ambari-server
 ```
 
-> Install MySQL database `SQL server (_hdp-4)_`
+> Install MySQL database `SQL server (_hdp-1)_`
 
 ```sh
 # check hostname
@@ -69,7 +67,7 @@ yum -y install mysql-server
 systemctl start mysqld
 ``` 
  
-> Configure MySQL database step 1 `Ambari Server host (_instance-1)_` 
+> Configure MySQL database step 1 `Ambari Server host (_hdp-1)_` 
 ```sh  
 # Update /etc/my.cnf or /etc/mysql/my.cnf file at least the values shown below
 
@@ -140,7 +138,7 @@ pid-file=/var/run/mysqld/mysqld.pid
 systemctl restart mysqld
 ``` 
 
-> Configure MySQL database step 2 `Ambari Server host (_instance-3)_`
+> Configure MySQL database step 2 `Ambari Server host (_hdp-1)_`
 You will be given the choice to change:
 - root password
 - remove anonymous user accounts
@@ -157,7 +155,7 @@ mysql_secure_installation
 
 ![MetaStore remote database](https://github.com/gamboabdoulraoufou/Cloudera-2-Cloudera-Manager-instllation/blob/master/img/mysql_secure_installation.PNG)
 
-> Configure MySQL database step 3 `Ambari Server host (_instance-3)_`
+> Configure MySQL database step 3 `Ambari Server host (_hdp-1)_`
 ```sh
 # installing the MySQL JDBC Connector 
 yum install -y mysql-connector-java*
@@ -178,7 +176,7 @@ systemctl enable mysqld.service
 systemctl list-dependencies mysqld
 ``` 
 
-> Set up MySQL database for Ambari [Ref.](https://docs.hortonworks.com/HDPDocuments/Ambari-2.1.2.1/bk_ambari_reference_guide/content/_using_ambari_with_mysql.html)
+> Set up MySQL database for Ambari  `Ambari Server host (_hdp-1)_` [Ref.](https://docs.hortonworks.com/HDPDocuments/Ambari-2.1.2.1/bk_ambari_reference_guide/content/_using_ambari_with_mysql.html)
 
 ```sh
 # log to MySQL
@@ -216,7 +214,7 @@ exit
 When setting up the Ambari Server, select Advanced Database Configuration > Option [3] MySQL and set password
 
 
-> Set up MySQL database for Hive [Ref.](https://docs.hortonworks.com/HDPDocuments/Ambari-2.1.2.1/bk_ambari_reference_guide/content/_using_hive_with_mysql.html) `_Ambari server node (instance-1)_`
+> Set up MySQL database for Hive [Ref.](https://docs.hortonworks.com/HDPDocuments/Ambari-2.1.2.1/bk_ambari_reference_guide/content/_using_hive_with_mysql.html) `_Ambari server node (hdp-1)_`
 
 ```sh
 # log to MySQL
@@ -233,9 +231,6 @@ CREATE USER 'hive_user'@'instance-1.c.equipe-1314.internal' IDENTIFIED BY 'passw
 GRANT ALL PRIVILEGES ON *.* TO 'hive_user'@'instance-1.c.equipe-1314.internal';
 FLUSH PRIVILEGES;
 
-# check users
-SELECT User, Host, Password FROM mysql.user;
-
 # quit MysQL
 exit
 ```
@@ -249,7 +244,7 @@ mysql -u hive_user -p
 CREATE DATABASE hive_database;
 ```
 
-> Set up MySQL database for OOZIE [Ref.](https://docs.hortonworks.com/HDPDocuments/Ambari-2.1.2.1/bk_ambari_reference_guide/content/_using_oozie_with_mysql.html) `_Ambari server node (instance-1)_`
+> Set up MySQL database for OOZIE [Ref.](https://docs.hortonworks.com/HDPDocuments/Ambari-2.1.2.1/bk_ambari_reference_guide/content/_using_oozie_with_mysql.html) `_Ambari server node (hdp-1)_`
 
 ```sh
 # log to MySQL
@@ -276,7 +271,34 @@ CREATE DATABASE oozie_database;
 ```
 
 
-> Configure Ambari server `_Ambari server node (instance-3)_`
+```sh
+# log to MySQL
+mysql -u root -p
+```
+
+```sql
+# create a user for oozie and grant it permissions
+CREATE USER 'hue_user'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'hue_user'@'%';
+FLUSH PRIVILEGES;
+
+# check users
+SELECT User, Host, Password FROM mysql.user;
+
+# quit MysQL
+exit
+```
+
+```sh
+# log to MySQL
+mysql -u hue_user -p
+```
+
+```sql
+CREATE DATABASE hue_database;
+```
+
+> Configure Ambari server `_Ambari server node (hdp-1)_`
 
 ```sh
 # configuration [Ref.](https://community.hortonworks.com/questions/55968/ambari-agent-start-failed-2.html)
@@ -287,7 +309,7 @@ ambari-server setup
 ![Ambari-config](https://github.com/gamboabdoulraoufou/hdp-2-ambari-and-hadoop-components-installation/blob/master/img/ambari_config2.png)
 
 
-> Disable ...
+> Disable ...  `_Ambari server node (hdp-1)_`
 
 ```sh
 sed -i 's@enabled=1@enabled=0@' /var/lib/ambari-server/resources/stacks/HDP/2.0.6/configuration/cluster-env.xml
@@ -331,7 +353,7 @@ chmod +x /var/lib/ambari-agent/hostname.sh
 
 ```
 
-> Start Ambari server `_Ambari server node (instance-3)_`
+> Start Ambari server  `_Ambari server node (hdp-1)_`
 
 ```sh
 # start Ambari server
