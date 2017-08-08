@@ -1,16 +1,16 @@
 ### HDP-2-ambari-installation
 
 > Configuration
-- 4 VMs on google compute Engine (3 VM for Hadoop Cluster and 1 VM for data backup and micro service)
-- OS: CentOS 6
-- RAM: 15Go
+- 4 VMs on google compute Engine (3 VM for Hadoop Cluster and 1 VM for data backup and micro services)
+- OS: CentOS 7
+- RAM: 15 Go
 - CPU: 4
-- Boot disk: 100Go
-- Attached disk: 200G
+- Boot disk: 200Go
+- Attached disk: 2000G
 
 > Cluster model
 
-![MetaStore remote database](https://github.com/gamboabdoulraoufou/hdp-1-host-config/blob/master/img/archi.png)
+![MetaStore remote database](https://github.com/gamboabdoulraoufou/hdp-1-host-config/blob/master/img/archi_v2.png)
 
 
 > Download and install Ambari server `_Ambari server node (hdp-1)_`
