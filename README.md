@@ -20,8 +20,13 @@
 sudo su - root
 
 # download
-## from internet
+## from internet (https://docs.hortonworks.com/HDPDocuments/Ambari-2.5.1.0/bk_ambari-installation/content/ambari_repositories.html)
 wget http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.4.0.1/ambari.repo
+wget http://public-repo-1.hortonworks.com/HDP/centos7/2.x/updates/2.5.6.0/hdp.repo
+wget http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.21/repos/centos7/HDP-UTILS-1.1.0.21-centos7.tar.gz
+mkdir HDP-UTILS
+tar -xvzf HDP-UTILS-1.1.0.21-centos7.tar.gz -C HDP-UTILS
+cp HDP-UTILS/hdp-util.repo .
 
 ## from local repository
 wget http://velvet-repo.c.projet-ic-166005.internal/repo/AMBARI/centos7/2.4.0.1-1/ambari.repo
@@ -88,7 +93,6 @@ vi /etc/my.cnf
 # changes to the binary log between backups.
 # log_bin
 bind-address = hdp-1.c.projet-ic-166005.internal
-#
 key_buffer              = 16M
 key_buffer_size         = 32M
 max_allowed_packet      = 16M
