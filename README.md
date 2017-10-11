@@ -317,8 +317,15 @@ ambari-server setup
 
 ```sh
 sed -i 's@enabled=1@enabled=0@' /var/lib/ambari-server/resources/stacks/HDP/2.0.6/configuration/cluster-env.xml
+```
+
+
+> Disable ...  `_all nodes_`
+
+```sh
 sed -i 's/verify=platform_default/verify=disable/' /etc/python/cert-verification.cfg
 ```
+
 
 
 > Install and configure Ambari agent `_All nodes_`
