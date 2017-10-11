@@ -362,6 +362,14 @@ chmod +x /var/lib/ambari-agent/hostname.sh
 ```sh
 # start Ambari server
 ambari-server start
+
+# start ambari server after reboot
+crontab -e
+
+# add the following line
+#### START ####
+@reboot ambari-server start
+#### END ####
 ```
 
 > Start Ambari agent `_All nodes_`
@@ -369,6 +377,15 @@ ambari-server start
 ```sh
 # start Ambari agent
 ambari-agent start
+
+# start ambari server after reboot
+crontab -e
+
+# add the following line
+#### START ####
+@reboot ambari-agent start
+#### END ####
+
 ```
 
 
