@@ -317,7 +317,7 @@ ambari-server setup
 
 ```sh
 sed -i 's@enabled=1@enabled=0@' /var/lib/ambari-server/resources/stacks/HDP/2.0.6/configuration/cluster-env.xml
-
+sed -i 's/verify=platform_default/verify=disable/' /etc/python/cert-verification.cfg
 ```
 
 
