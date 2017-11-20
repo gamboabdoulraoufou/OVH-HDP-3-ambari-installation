@@ -332,7 +332,7 @@ sed -i 's/verify=platform_default/verify=disable/' /etc/python/cert-verification
 
 ```sh
 # install ambari agent
-yum install ambari-agent
+yum -y install ambari-agent
 
 # backup config file 
 cp -p /etc/ambari-agent/conf/ambari-agent.ini /etc/ambari-agent/conf/ambari-agent.ini.ORI
