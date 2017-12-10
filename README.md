@@ -193,8 +193,8 @@ CREATE USER 'ambari_user'@'%' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON *.* TO 'ambari_user'@'%';
 CREATE USER 'ambari_user'@'localhost' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON *.* TO 'ambari_user'@'localhost';
-CREATE USER 'ambari_user'@'instance-1.c.equipe-1314.internal' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON *.* TO 'ambari_user'@'instance-1.c.equipe-1314.internal';
+CREATE USER 'ambari_user'@'poc-hdp-1.c.equipe-1314.internal' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'ambari_user'@'poc-hdp-1.c.equipe-1314.internal';
 FLUSH PRIVILEGES;
 
 # quit MySQL
@@ -231,8 +231,8 @@ CREATE USER 'hive_user'@'localhost' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON *.* TO 'hive_user'@'localhost';
 CREATE USER 'hive_user'@'%' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON *.* TO 'hive_user'@'%';
-CREATE USER 'hive_user'@'instance-1.c.equipe-1314.internal' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON *.* TO 'hive_user'@'instance-1.c.equipe-1314.internal';
+CREATE USER 'hive_user'@'poc-hdp-1.c.equipe-1314.internal' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'hive_user'@'poc-hdp-1.c.equipe-1314.internal';
 FLUSH PRIVILEGES;
 
 # quit MysQL
