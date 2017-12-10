@@ -344,7 +344,7 @@ vi /etc/ambari-agent/conf/ambari-agent.ini
 [server]
 # hostname=localhost
 # hostname=ambari_server_host_name for all nodes
-hostname=hdp-1.c.projet-ic-166005.internal
+hostname=poc-hdp-1.c.equipe-1314.internal
 [agent]
 hostname_script=/var/lib/ambari-agent/hostname.sh
 
@@ -355,7 +355,7 @@ vi /var/lib/ambari-agent/hostname.sh
 
 # add the current host name
 #!/bin/sh
-echo hdp-1.c.projet-ic-166005.internal
+echo poc-hdp-1.c.equipe-1314.internal
 
 # save and quit
 
