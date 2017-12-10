@@ -39,16 +39,16 @@ mv hdp.repo /etc/yum.repos.d
 mv hdp-util.repo /etc/yum.repos.d
 
 # copy ambari repo into all other nodes
-scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@poc-stream-processing-2.c.equipe-1314.internal:/etc/yum.repos.d/
-scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@poc-stream-processing-3.c.equipe-1314.internal:/etc/yum.repos.d/
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@poc-hdp-2.c.equipe-1314.internal:/etc/yum.repos.d/
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/ambari.repo root@poc-hdp-3.c.equipe-1314.internal:/etc/yum.repos.d/
 
 # copy hdp-utils repo into all other nodes
-scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp-util.repo root@poc-stream-processing-2.c.equipe-1314.internal:/etc/yum.repos.d/
-scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp-util.repo root@poc-stream-processing-3.c.equipe-1314.internal:/etc/yum.repos.d/
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp-util.repo root@poc-hdp-2.c.equipe-1314.internal:/etc/yum.repos.d/
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp-util.repo root@poc-hdp-3.c.equipe-1314.internal:/etc/yum.repos.d/
 
 # copy hdp repo into all other nodes
-scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp.repo root@poc-stream-processing-2.c.equipe-1314.internal:/etc/yum.repos.d/
-scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp.repo root@poc-stream-processing-3.c.equipe-1314.internal:/etc/yum.repos.d/
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp.repo root@poc-hdp-2.c.equipe-1314.internal:/etc/yum.repos.d/
+scp -i /root/.ssh/id_rsa /etc/yum.repos.d/hdp.repo root@poc-hdp-3.c.equipe-1314.internal:/etc/yum.repos.d/
 
 # installation
 yum clean all
@@ -92,7 +92,7 @@ vi /etc/my.cnf
 # Remove leading # to turn on a very important data integrity option: logging
 # changes to the binary log between backups.
 # log_bin
-bind-address = poc-stream-processing-1.c.equipe-1314.internal
+bind-address = poc-hdp-1.c.equipe-1314.internal
 key_buffer              = 16M
 key_buffer_size         = 32M
 max_allowed_packet      = 16M
