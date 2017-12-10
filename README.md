@@ -376,7 +376,7 @@ crontab -e
 # add the following line
 #### START ####
 # start ambari server
-@reboot sudo ambari-server start
+@reboot sleep 60; sudo ambari-server start
 #### END ####
 ```
 
@@ -392,7 +392,7 @@ crontab -e
 # add the following line
 #### START ####
 # start ambari agent
-@reboot sudo ambari-agent start
+@reboot sleep 120; sudo ambari-agent start
 #### END ####
 
 ```
